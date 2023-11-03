@@ -1,9 +1,8 @@
 import sqlite3 as sq
-from datetime import datetime
 
 class db:
     def __init__(self):
-        self.db = sq.connect('tg_training_bot.db')
+        self.db = sq.connect('kwork_bot.db')
         self.cursor = self.db.cursor()
     #  Здесь я создаю базу данных для юзеров, где будут хрониться их id и id дня который у них сегодня. И бд для админа, где будут id дня, фраза, и таски на день  
     def db_connect(self):
