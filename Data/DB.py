@@ -81,6 +81,7 @@ class DataBase:
         self.db.commit()
         return dinner
 
-db = DataBase()
-db.db_connect()
+if __name__ == '__main__':
+    db = DataBase()
+    db.db_connect()
 
