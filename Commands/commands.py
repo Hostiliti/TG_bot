@@ -4,26 +4,20 @@ from aiogram import Bot
 async def set_commands_Users(bot: Bot):
     commands = [
         BotCommand(
-            command='start',
+            command='/start',
             description='Старт.'
         ),
         BotCommand(
-            command='help',
+            command='/Help',
             description='Узнай функционал бота.'
         ),
         BotCommand(
-            command='write_training',
+            command='/Show today tasks',
             description='Запиши треню.'
-        ),
-        BotCommand(
-            command='del_training',
-            description='Удали треню, если она отменилась.'
-        ),
-        BotCommand(
-            command='show_all',
-            description='Посмотри, какие трени записаны.'
         )
     ]
+    
+    await bot.set_my_commands(commands)
 
 async def set_commands_Admin():
     commands = [

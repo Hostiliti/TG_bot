@@ -6,22 +6,23 @@ from aiogram.filters import Command
 from dotenv import load_dotenv
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from Commands.func_comand import get_start, get_help, show_all_task, send_remind_cron, add_time_user
+from Commands.handlers import get_start, get_help, show_today_tasks, send_remind_cron_breakfast, send_remind_cron_lunch, send_remind_cron_dinner
 from Loging.Logs import logs
 
 async def main():
     load_dotenv()
     bot = Bot(token=os.getenv('TG_API'))
-    dp = Dispatcher()
 
     scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
-    scheduler.add_job(send_remind_cron, trigger='cron', hour=0, minute=10, kwargs={'bot': bot})
+    scheduler.add_job(send_remind_cron_breakfast, trigger='cron', hour=7, kwargs={'bot': bot})
+    scheduler.add_job(send_remind_cron_lunch, trigger='cron', hour=13, kwargs={'bot': bot})
+    scheduler.add_job(send_remind_cron_dinner, trigger='cron', hour=18, minute=8, kwargs={'bot': bot})
     scheduler.start()
-
+    
+    dp = Dispatcher()
     dp.message.register(get_start, Command(commands=['start']))
-    dp.message.register(get_help, lambda message: message.text == "Help")
-    dp.message.register(show_all_task, lambda message: message.text == "Show all tasks")
-    dp.message.register(add_time_user, lambda message: message.text == "Add Time tasks")
+    dp.message.register(get_help, lambda message: message.text == 'Help')
+    dp.message.register(show_today_tasks, lambda message: message.text == 'Show today tasks')
 
     try:
         logs().success('Бот запущен')

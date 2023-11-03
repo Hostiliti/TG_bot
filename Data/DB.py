@@ -1,6 +1,6 @@
 import sqlite3 as sq
 
-class db:
+class DataBase:
     def __init__(self):
         self.db = sq.connect('kwork_bot.db')
         self.cursor = self.db.cursor()
@@ -12,7 +12,7 @@ class db:
         ''')
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS tasks(
                         day_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        phrase TEXT
+                        phrase TEXT,
                         breakfast TEXT,
                         lunch TEXT,
                         dinner TEXT);
@@ -31,14 +31,20 @@ class db:
         
     # эта чехерня будет записывать пользователя в бд по комманде старт. И сразу будет ставить ему день 1. Повторное нажатие старт ничего не сломает, тк если он уже записан его номер дня не изменится.
     def db_add_user(self, user_id):
-        self.cursor.execute(f'INSERT INTO users (user_id, task_id) VALUES (?, ?) ON CONFLICT DO NOTHING', (user_id, 1))
+        self.cursor.execute(f'INSERT INTO users (user_id, day_id) VALUES (?, ?) ON CONFLICT DO NOTHING', (user_id, 1))
         self.db.commit()
         
+    def db_get_day_id(self, user_id):
+        self.cursor.execute('SELECT day_id FROM users WHERE user_id = ?', (user_id,))
+        day_id = self.cursor.fetchone()[0]
+        self.db.commit()
+        return day_id
+    
     #    это для юзера, будет чисто показывать таски на сегодня по day_id который хранится у пользователя в бд
     def db_show_today_tasks(self, day_id):
-        tself.cursor.execute('SELECT * FROM tasks WHERE day_id = ?', (day_id,))
+        self.cursor.execute('SELECT * FROM tasks WHERE day_id = ?', (day_id,))
         tasks = self.cursor.fetchone()
-        tasks = f"Завтрак - {tasks[1]}.\nОбед - {tasks[2]}.\nУжин - {tasks[2]}."
+        tasks = f"Завтрак - {tasks[2]}.\nОбед - {tasks[3]}.\nУжин - {tasks[4]}."
         self.db.commit()
         return tasks
     
@@ -49,4 +55,32 @@ class db:
         all_tasks = '\n'.join(' '.join(map(str, list(t))) for t in all_tasks)
         self.db.commit()
         return all_tasks
+    
+    def db_all_users(self):
+        self.cursor.execute('SELECT * FROM users')
+        all_users = self.cursor.fetchall()
+        all_users = [list(u) for u in all_users]
+        self.db.commit()
+        return all_users
+    
+    def db_get_breakfast(self, day_id):
+        self.cursor.execute('SELECT breakfast FROM tasks WHERE day_id = ?', (day_id,))
+        breakfast = self.cursor.fetchone()[0]
+        self.db.commit()
+        return breakfast
+        
+    def db_get_lunch(self, day_id):
+        self.cursor.execute('SELECT lunch FROM tasks WHERE day_id = ?', (day_id,))
+        lunch = self.cursor.fetchone()[0]
+        self.db.commit()
+        return lunch
+    
+    def db_get_dinner(self, day_id):
+        self.cursor.execute('SELECT dinner FROM tasks WHERE day_id = ?', (day_id,))
+        dinner = self.cursor.fetchone()[0]
+        self.db.commit()
+        return dinner
+
+db = DataBase()
+db.db_connect()
 
