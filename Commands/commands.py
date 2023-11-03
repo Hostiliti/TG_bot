@@ -1,7 +1,7 @@
+from aiogram.types import BotCommand
 from aiogram import Bot
-from aiogram.types import Message, BotCommand, BotCommandScopeDefault
 
-async def set_commands(bot: Bot):
+async def set_commands_Users(bot: Bot):
     commands = [
         BotCommand(
             command='start',
@@ -22,5 +22,17 @@ async def set_commands(bot: Bot):
         BotCommand(
             command='show_all',
             description='Посмотри, какие трени записаны.'
+        )
+    ]
+
+async def set_commands_Admin():
+    commands = [
+        BotCommand(
+            command='start',
+            description='Старт.'
+        ),
+        BotCommand(
+            command='help',
+            description='Узнай функционал бота.'
         )
     ]
