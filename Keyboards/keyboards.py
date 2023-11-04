@@ -5,8 +5,9 @@ class UserKeyboards:
     def reply_keyboard():
         reply_keyboard = ReplyKeyboardBuilder()
         reply_keyboard.button(text='Help')
+        reply_keyboard.button(text='Add time')
         reply_keyboard.button(text='Show today tasks')
-        reply_keyboard.adjust(2)
+        reply_keyboard.adjust(2, 1)
         return reply_keyboard.as_markup(resize_keyboard=True, one_time_keyboard=True)
 
     @staticmethod
